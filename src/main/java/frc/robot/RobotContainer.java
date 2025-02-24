@@ -47,6 +47,7 @@ public class RobotContainer {
   public static final PIDElevSS2 rc_pidElevSS2 = new PIDElevSS2();
   public static final PIDAlgaeSS rc_pidAlgaeSS = new PIDAlgaeSS();
   public static final MotorsSS rc_MotorSS = new MotorsSS();
+  public static final PIDSS rc_PIDSS = new PIDSS();
 
   // The robot's commands
   public static final PneumaticsC rc_PneumaticsC = new PneumaticsC(rc_PneumaticsSS);
@@ -103,12 +104,15 @@ public class RobotContainer {
     m_operatorController.x().onTrue(rc_PneumaticsC);
     m_operatorController.y().onTrue(rc_PneumaticsC);
     // Elevator PID
-    m_operatorController.povUp().onTrue(new ElevatorPIDC1(rc_pidElevSS1, () -> 100));
+    /*m_operatorController.povUp().onTrue(new ElevatorPIDC1(rc_pidElevSS1, () -> 100));
     m_operatorController.povRight().onTrue(new ElevatorPIDC1(rc_pidElevSS1, () -> 50));
     m_operatorController.povDown().onTrue(new ElevatorPIDC1(rc_pidElevSS1, () -> 0));
     m_operatorController.povUp().onTrue(new ElevatorPIDC2(rc_pidElevSS2, () -> 100));
     m_operatorController.povRight().onTrue(new ElevatorPIDC2(rc_pidElevSS2, () -> 50));
-    m_operatorController.povDown().onTrue(new ElevatorPIDC2(rc_pidElevSS2, () -> 0));
+    m_operatorController.povDown().onTrue(new ElevatorPIDC2(rc_pidElevSS2, () -> 0));*/
+    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 100));
+    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 50));
+    m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 0));
     m_operatorController.start().onTrue(rc_ElevatorZeroC);
     // Algae Control
     m_operatorController.a().whileTrue(rc_AlgaeInC);

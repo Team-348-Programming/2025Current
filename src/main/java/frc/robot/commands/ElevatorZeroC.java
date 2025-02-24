@@ -25,7 +25,6 @@ public class ElevatorZeroC extends Command {
   @Override
   public void end(boolean interrupted) {
     RobotContainer.rc_pidElevSS1.MotorStop();
-    RobotContainer.rc_pidElevSS2.MotorStop();
   }
 
   @Override
