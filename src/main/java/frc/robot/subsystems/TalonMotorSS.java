@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 
-public class MotorsSS extends SubsystemBase{
+public class TalonMotorSS extends SubsystemBase{
     public final SparkMax Algae = new SparkMax(12, MotorType.kBrushless);
     public final TalonSRX Coral = new TalonSRX(2);
 

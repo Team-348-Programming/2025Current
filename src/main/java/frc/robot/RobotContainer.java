@@ -43,18 +43,13 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   public static final PneumaticsSS rc_PneumaticsSS = new PneumaticsSS();
-  //public static final PIDElevSS1 rc_pidElevSS1 = new PIDElevSS1();
-  //public static final PIDElevSS2 rc_pidElevSS2 = new PIDElevSS2();
   //public static final PIDAlgaeSS rc_pidAlgaeSS = new PIDAlgaeSS();
-  //public static final MotorsSS rc_MotorSS = new MotorsSS();
+  public static final TalonMotorSS rc_TalonMotorSS = new TalonMotorSS();
   public static final PIDSS rc_PIDSS = new PIDSS();
 
   // The robot's commands
   public static final PneumaticsC rc_PneumaticsC = new PneumaticsC(rc_PneumaticsSS);
-  //public static final ElevatorZeroC rc_ElevatorZeroC = new ElevatorZeroC(rc_pidElevSS1);
-  /*public static final AlgaeInC rc_AlgaeInC = new AlgaeInC(rc_MotorSS);
-  public static final AlgaeOutC rc_AlgaeOutC = new AlgaeOutC(rc_MotorSS);
-  public static final CoralOutC rc_CoralOutC = new CoralOutC(rc_MotorSS);*/
+  public static final AlgaeC rc_AlgaeC = new AlgaeC(rc_TalonMotorSS);
 
   // Other instantiations
   public static final PneumaticHub PH = new PneumaticHub(1);
@@ -104,19 +99,13 @@ public class RobotContainer {
     m_operatorController.x().onTrue(rc_PneumaticsC);
     m_operatorController.y().onTrue(rc_PneumaticsC);
     // Elevator PID
-    /*m_operatorController.povUp().onTrue(new ElevatorPIDC1(rc_pidElevSS1, () -> 100));
-    m_operatorController.povRight().onTrue(new ElevatorPIDC1(rc_pidElevSS1, () -> 50));
-    m_operatorController.povDown().onTrue(new ElevatorPIDC1(rc_pidElevSS1, () -> 0));
-    m_operatorController.povUp().onTrue(new ElevatorPIDC2(rc_pidElevSS2, () -> 100));
-    m_operatorController.povRight().onTrue(new ElevatorPIDC2(rc_pidElevSS2, () -> 50));
-    m_operatorController.povDown().onTrue(new ElevatorPIDC2(rc_pidElevSS2, () -> 0));*/
     m_driverController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 32)); // 33 MAX HEIGHT
     m_driverController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 17));
     m_driverController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 0));
     //m_operatorController.start().onTrue(rc_ElevatorZeroC);
     // Algae Control
-    //m_operatorController.a().whileTrue(rc_AlgaeInC);
-    //m_operatorController.b().whileTrue(rc_AlgaeOutC);
+    m_operatorController.a().whileTrue(rc_AlgaeC);
+    m_operatorController.b().whileTrue(rc_AlgaeC);
   }
 
   @SuppressWarnings("null")
