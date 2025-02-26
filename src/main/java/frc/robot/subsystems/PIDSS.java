@@ -65,8 +65,8 @@ public class PIDSS extends SubsystemBase {
 
     voltage = PIDVoltage;
 
-    Motor2.setVoltage(PIDVoltage);
     Motor1.setVoltage(PIDVoltage);
+    Motor2.setVoltage(PIDVoltage);
   }
 
   public double getVoltage() {

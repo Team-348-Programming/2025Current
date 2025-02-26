@@ -12,7 +12,7 @@ import frc.robot.subsystems.*;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeInC extends Command {
 
-  public AlgaeInC(MotorsSS subsystem) {
+  /*public AlgaeInC(MotorsSS subsystem) {
     subsystem = RobotContainer.rc_MotorSS;
     addRequirements(subsystem);
   }
@@ -37,5 +37,5 @@ public class AlgaeInC extends Command {
   @Override
   public boolean isFinished() {
     return false;
-  }
+  }*/
 }

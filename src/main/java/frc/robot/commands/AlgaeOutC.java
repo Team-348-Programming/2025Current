@@ -12,7 +12,7 @@ import frc.robot.RobotContainer;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeOutC extends Command {
   /** Creates a new AlgaeOutC. */
-  public AlgaeOutC(MotorsSS subsystem) {
+  /*public AlgaeOutC(MotorsSS subsystem) {
     subsystem = RobotContainer.rc_MotorSS;
     addRequirements(subsystem);  
 }
@@ -37,5 +37,5 @@ public class AlgaeOutC extends Command {
   @Override
   public boolean isFinished() {
     return false;
-  }
+  }*/
 }

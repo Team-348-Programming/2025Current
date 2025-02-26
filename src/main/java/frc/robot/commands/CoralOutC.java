@@ -14,7 +14,7 @@ import frc.robot.RobotContainer;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class CoralOutC extends Command {
   /** Creates a new CoralOutC. */
-  public CoralOutC(MotorsSS subsystem) {
+  /*public CoralOutC(MotorsSS subsystem) {
     subsystem = RobotContainer.rc_MotorSS;
     addRequirements(subsystem);
   }
@@ -41,5 +41,5 @@ public class CoralOutC extends Command {
   @Override
   public boolean isFinished() {
     return false;
-  }
+  }*/
 }

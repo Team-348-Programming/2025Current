@@ -7,7 +7,7 @@ import frc.robot.subsystems.PIDAlgaeSS;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class AlgaePIDC extends Command{
-  public final PIDAlgaeSS m_algae;
+  /*public final PIDAlgaeSS m_algae;
   private final DoubleSupplier m_desiredVelocity;
 
   public AlgaePIDC(PIDAlgaeSS subsystem, DoubleSupplier desiredVelocity) {
@@ -32,5 +32,5 @@ public class AlgaePIDC extends Command{
   @Override
   public boolean isFinished() {
     return false;
-  }
+  }*/
 }
