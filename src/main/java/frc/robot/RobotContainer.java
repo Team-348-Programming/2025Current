@@ -44,13 +44,13 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   public static final PneumaticsSS rc_PneumaticsSS = new PneumaticsSS();
   public static final PIDAlgaeSS rc_pidAlgaeSS = new PIDAlgaeSS();
-  public static final TalonMotorSS rc_TalonMotorSS = new TalonMotorSS();
+  public static final AlgaeSS rc_AlgaeSS = new AlgaeSS();
   public static final PIDSS rc_PIDSS = new PIDSS();
   public static final PIDAlgaeSS rc_PIDAlgaeSS = new PIDAlgaeSS();
 
   // The robot's commands
   public static final PneumaticsC rc_PneumaticsC = new PneumaticsC(rc_PneumaticsSS);
-  public static final AlgaeC rc_AlgaeC = new AlgaeC(rc_TalonMotorSS);
+  public static final AlgaeC rc_AlgaeC = new AlgaeC(rc_AlgaeSS);
   public static final ElevZeroC rc_ElevZeroC = new ElevZeroC(rc_PIDSS);
   public static final AlgaeZeroC rc_AlgaeZeroC = new AlgaeZeroC(rc_PIDAlgaeSS);
 

@@ -5,7 +5,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class TalonMotorSS extends SubsystemBase{
+public class AlgaeSS extends SubsystemBase{
     public final SparkMax Algae = new SparkMax(12, MotorType.kBrushless);
 
     public void AlgaeForward(){

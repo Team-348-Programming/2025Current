@@ -6,13 +6,13 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.TalonMotorSS;
+import frc.robot.subsystems.AlgaeSS;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AlgaeC extends Command {
   /** Creates a new AlgaeC. */
-  public AlgaeC(TalonMotorSS subsystem) {
-    subsystem = RobotContainer.rc_TalonMotorSS;
+  public AlgaeC(AlgaeSS subsystem) {
+    subsystem = RobotContainer.rc_AlgaeSS;
     addRequirements(subsystem);   
   }
 
@@ -24,16 +24,16 @@ public class AlgaeC extends Command {
   @Override
   public void execute() {
     if (RobotContainer.m_operatorController.a().getAsBoolean()) {
-      RobotContainer.rc_TalonMotorSS.AlgaeReverse();
+      RobotContainer.rc_AlgaeSS.AlgaeReverse();
     } else {
-      RobotContainer.rc_TalonMotorSS.AlgaeForward();
+      RobotContainer.rc_AlgaeSS.AlgaeForward();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    RobotContainer.rc_TalonMotorSS.AlgaeStop();
+    RobotContainer.rc_AlgaeSS.AlgaeStop();
   }
 
   // Returns true when the command should end.

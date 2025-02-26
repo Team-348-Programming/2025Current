@@ -20,7 +20,6 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
-  public static final int Wrist = 1;
 
   public static final double kP = 0.85;
   public static final double kI = 0;
