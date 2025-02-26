@@ -20,6 +20,10 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
 
+  public static final int PIDmotor1 = 9;
+  public static final int PIDmotor2 = 10;
+  public static final int PIDalgae = 11;
+  public static final int algae = 12;
 
   public static final double kP = 0.85;
   public static final double kI = 0;

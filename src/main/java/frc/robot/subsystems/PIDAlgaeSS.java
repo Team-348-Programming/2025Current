@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class PIDAlgaeSS extends SubsystemBase{
-  public final SparkMax Algae = new SparkMax(11, MotorType.kBrushless);
+  public final SparkMax Algae = new SparkMax(Constants.PIDalgae, MotorType.kBrushless);
 
   private final PIDController Velo_PID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
   private final PIDController Pos_PID = new PIDController(Constants.kP, Constants.kI, Constants.kD);
