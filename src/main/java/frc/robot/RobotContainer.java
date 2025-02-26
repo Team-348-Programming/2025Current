@@ -105,7 +105,7 @@ public class RobotContainer {
     m_operatorController.x().onTrue(rc_PneumaticsC); // Algae Guide
     m_operatorController.y().onTrue(rc_PneumaticsC); // Climber
     // Elevator PID
-    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 32)); // 33 MAX HEIGHT
+    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 29)); // 29 MAX HEIGHT
     m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 17));
     m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 0));
     m_operatorController.start().onTrue(rc_ElevZeroC);
