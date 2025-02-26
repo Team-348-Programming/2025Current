@@ -31,6 +31,8 @@ public final class Constants {
     public static final int reverseGuideSol = 2;
     public static final int forwardClimbSol = 3;
     public static final int reverseClimbSol = 4;
+    public static final int forwardCoralSol = 5;
+    public static final int reverseCoralSol = 6;
   }
 
   public static final class CoralSubsystemConstants {

@@ -22,11 +22,11 @@ public class PIDAlgaeSS extends SubsystemBase{
 
   private double voltage;
 
-  public void MotorStop() {
+  public void AlgaeStop() {
     Algae.set(0);
   }
 
-  public void Zero() {
+  public void AlgaeZero() {
     Algae.set(-0.3);
   }
 

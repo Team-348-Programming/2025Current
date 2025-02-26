@@ -19,7 +19,9 @@ public class PneumaticsC extends InstantCommand {
     } else {
       if (RobotContainer.m_operatorController.y().getAsBoolean() == true) {
         RobotContainer.rc_PneumaticsSS.ToggleClimb();
-      } 
+      } else {
+        RobotContainer.rc_PneumaticsSS.ToggleCoral();
+      }
     }
   }
 }

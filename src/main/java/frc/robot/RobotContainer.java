@@ -43,13 +43,16 @@ public class RobotContainer {
   // The robot's subsystems
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   public static final PneumaticsSS rc_PneumaticsSS = new PneumaticsSS();
-  //public static final PIDAlgaeSS rc_pidAlgaeSS = new PIDAlgaeSS();
+  public static final PIDAlgaeSS rc_pidAlgaeSS = new PIDAlgaeSS();
   public static final TalonMotorSS rc_TalonMotorSS = new TalonMotorSS();
   public static final PIDSS rc_PIDSS = new PIDSS();
+  public static final PIDAlgaeSS rc_PIDAlgaeSS = new PIDAlgaeSS();
 
   // The robot's commands
   public static final PneumaticsC rc_PneumaticsC = new PneumaticsC(rc_PneumaticsSS);
   public static final AlgaeC rc_AlgaeC = new AlgaeC(rc_TalonMotorSS);
+  public static final ElevZeroC rc_ElevZeroC = new ElevZeroC(rc_PIDSS);
+  public static final AlgaeZeroC rc_AlgaeZeroC = new AlgaeZeroC(rc_PIDAlgaeSS);
 
   // Other instantiations
   public static final PneumaticHub PH = new PneumaticHub(1);
@@ -91,21 +94,21 @@ public class RobotContainer {
     m_driverController.leftStick().whileTrue(m_robotDrive.setXCommand());
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
     // Algae PID
-    //m_driverController.povUp().onTrue(new AlgaePIDC(rc_pidAlgaeSS, () -> 100));
-    //m_driverController.povDown().onTrue(new AlgaePIDC(rc_pidAlgaeSS, () -> 0));
-    // Coral Control
-   // m_driverController.a().onTrue(rc_CoralOutC);
-    // Operator controller button commands
-    m_operatorController.x().onTrue(rc_PneumaticsC);
-    m_operatorController.y().onTrue(rc_PneumaticsC);
-    // Elevator PID
-    m_driverController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 32)); // 33 MAX HEIGHT
-    m_driverController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 17));
-    m_driverController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 0));
-    //m_operatorController.start().onTrue(rc_ElevatorZeroC);
+    m_driverController.povDown().onTrue(new AlgaePIDC(rc_pidAlgaeSS, () -> 20));
+    m_driverController.povUp().onTrue(new AlgaePIDC(rc_pidAlgaeSS, () -> 0));
+    m_driverController.y().onTrue(rc_AlgaeZeroC);
     // Algae Control
-    m_operatorController.a().whileTrue(rc_AlgaeC);
-    m_operatorController.b().whileTrue(rc_AlgaeC);
+    m_driverController.a().whileTrue(rc_AlgaeC);
+    m_driverController.b().whileTrue(rc_AlgaeC);
+    // Pneumatics
+    m_operatorController.a().onTrue(rc_PneumaticsC); // Coral
+    m_operatorController.x().onTrue(rc_PneumaticsC); // Algae
+    m_operatorController.y().onTrue(rc_PneumaticsC); // Climber
+    // Elevator PID
+    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 32)); // 33 MAX HEIGHT
+    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 17));
+    m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 0));
+    m_operatorController.start().onTrue(rc_ElevZeroC);
   }
 
   @SuppressWarnings("null")
