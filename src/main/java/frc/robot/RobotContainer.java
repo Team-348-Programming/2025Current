@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.math.MathUtil;
@@ -63,6 +64,12 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    // These are tests, delete and remake them to work for the actual auto for the robot
+    NamedCommands.registerCommand("AlgaeRemoval", rc_AlgaeC);
+    NamedCommands.registerCommand("RaiseElevator", new ElevPIDC(rc_PIDSS, () -> 29));
+    NamedCommands.registerCommand("AlgaePickUp", rc_AlgaeC);
+
     // Configure the button bindings
     configureButtonBindings();
 
@@ -106,7 +113,7 @@ public class RobotContainer {
     m_operatorController.y().onTrue(rc_PneumaticsC); // Climber
     // Elevator PID
     m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 29)); // 29 MAX HEIGHT
-    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 17));
+    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 15));
     m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 0));
     m_operatorController.start().onTrue(rc_ElevZeroC);
   }
