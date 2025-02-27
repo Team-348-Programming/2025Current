@@ -65,6 +65,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
+    // Path Planner Auto Commands
     // These are tests, delete and remake them to work for the actual auto for the robot
     NamedCommands.registerCommand("AlgaeRemoval", rc_AlgaeC);
     NamedCommands.registerCommand("RaiseElevator", new ElevPIDC(rc_PIDSS, () -> 29));
