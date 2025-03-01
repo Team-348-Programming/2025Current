@@ -14,14 +14,6 @@ public class PneumaticsC extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (RobotContainer.m_operatorController.x().getAsBoolean() == true) {
-      RobotContainer.rc_PneumaticsSS.ToggleGuide();
-    } else {
-      if (RobotContainer.m_operatorController.y().getAsBoolean() == true) {
-        RobotContainer.rc_PneumaticsSS.ToggleClimb();
-      } else {
-        RobotContainer.rc_PneumaticsSS.ToggleCoral();
-      }
-    }
+    RobotContainer.rc_PneumaticsSS.ToggleCoral();
   }
 }

@@ -22,18 +22,12 @@ public final class Constants {
 
   public static final int PIDmotor1 = 9;
   public static final int PIDmotor2 = 10;
-  public static final int PIDalgae = 11;
-  public static final int algae = 12;
 
   public static final double kP = 0.85;
   public static final double kI = 0;
   public static final double kD = 0;
 
   public static final class PneumaticsConstants {
-    public static final int forwardGuideSol = 1;
-    public static final int reverseGuideSol = 2;
-    public static final int forwardClimbSol = 3;
-    public static final int reverseClimbSol = 4;
     public static final int forwardCoralSol = 5;
     public static final int reverseCoralSol = 6;
   }

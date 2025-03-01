@@ -17,8 +17,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
@@ -42,34 +45,22 @@ import java.util.List;
 public class RobotContainer {
 
   // The robot's subsystems
-  private final DriveSubsystem m_robotDrive = new DriveSubsystem();
+  public static final DriveSubsystem m_robotDrive = new DriveSubsystem();
   public static final PneumaticsSS rc_PneumaticsSS = new PneumaticsSS();
-  public static final PIDAlgaeSS rc_pidAlgaeSS = new PIDAlgaeSS();
-  public static final AlgaeSS rc_AlgaeSS = new AlgaeSS();
   public static final PIDSS rc_PIDSS = new PIDSS();
-  public static final PIDAlgaeSS rc_PIDAlgaeSS = new PIDAlgaeSS();
 
   // The robot's commands
   public static final PneumaticsC rc_PneumaticsC = new PneumaticsC(rc_PneumaticsSS);
-  public static final AlgaeC rc_AlgaeC = new AlgaeC(rc_AlgaeSS);
   public static final ElevZeroC rc_ElevZeroC = new ElevZeroC(rc_PIDSS);
-  public static final AlgaeZeroC rc_AlgaeZeroC = new AlgaeZeroC(rc_PIDAlgaeSS);
 
   // Other instantiations
   public static final PneumaticHub PH = new PneumaticHub(1);
 
   // The controllers
   public static final CommandXboxController m_driverController = new CommandXboxController(0);
-  public static final CommandXboxController m_operatorController = new CommandXboxController(1);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    // Path Planner Auto Commands
-    // These are tests, delete and remake them to work for the actual auto for the robot
-    NamedCommands.registerCommand("AlgaeRemoval", rc_AlgaeC);
-    NamedCommands.registerCommand("RaiseElevator", new ElevPIDC(rc_PIDSS, () -> 29));
-    NamedCommands.registerCommand("AlgaePickUp", rc_AlgaeC);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -101,22 +92,13 @@ public class RobotContainer {
     // Driver controller button commands
     m_driverController.leftStick().whileTrue(m_robotDrive.setXCommand());
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
-    // Algae PID
-    m_driverController.povDown().onTrue(new AlgaePIDC(rc_pidAlgaeSS, () -> 20));
-    m_driverController.povUp().onTrue(new AlgaePIDC(rc_pidAlgaeSS, () -> 0));
-    m_driverController.y().onTrue(rc_AlgaeZeroC);
-    // Algae Control
-    m_driverController.a().whileTrue(rc_AlgaeC);
-    m_driverController.b().whileTrue(rc_AlgaeC);
     // Pneumatics
-    m_operatorController.a().onTrue(rc_PneumaticsC); // Coral
-    m_operatorController.x().onTrue(rc_PneumaticsC); // Algae Guide
-    m_operatorController.y().onTrue(rc_PneumaticsC); // Climber
+    m_driverController.a().onTrue(rc_PneumaticsC); // Coral
     // Elevator PID
-    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 29)); // 29 MAX HEIGHT
-    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 15));
-    m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 0));
-    m_operatorController.start().onTrue(rc_ElevZeroC);
+    m_driverController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 32)); // 32 MAX HEIGHT
+    m_driverController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 15));
+    m_driverController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 0));
+    m_driverController.y().whileTrue(rc_ElevZeroC);
   }
 
   @SuppressWarnings("null")
@@ -132,46 +114,50 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Create config for trajectory
-    TrajectoryConfig config =
-        new TrajectoryConfig(
-                AutoConstants.kMaxSpeedMetersPerSecond,
-                AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-            // Add kinematics to ensure max speed is actually obeyed
-            .setKinematics(DriveConstants.kDriveKinematics);
+      // TrajectoryConfig config =
+      //     new TrajectoryConfig(
+      //             AutoConstants.kMaxSpeedMetersPerSecond,
+      //             AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+      //         // Add kinematics to ensure max speed is actually obeyed
+      //         .setKinematics(DriveConstants.kDriveKinematics);
 
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory =
-        TrajectoryGenerator.generateTrajectory(
-            // Start at the origin facing the +X direction
-            new Pose2d(0, 0, new Rotation2d(0)),
-            // Pass through these two interior waypoints, making an 's' curve path
-            List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-            // End 3 meters straight ahead of where we started, facing forward
-            new Pose2d(3, 0, new Rotation2d(0)),
-            config);
+      // // An example trajectory to follow. All units in meters.
+      // Trajectory exampleTrajectory =
+      //     TrajectoryGenerator.generateTrajectory(
+      //         // Start at the origin facing the +X direction
+      //         new Pose2d(0, 0, new Rotation2d(0)),
+      //         // Pass through these two interior waypoints, making an 's' curve path
+      //         List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+      //         // End 3 meters straight ahead of where we started, facing forward
+      //         new Pose2d(3, 0, new Rotation2d(0)),
+      //         config);
 
-    var thetaController =
-        new ProfiledPIDController(
-            AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+      // var thetaController =
+      //     new ProfiledPIDController(
+      //         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+      // thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-    SwerveControllerCommand swerveControllerCommand =
-        new SwerveControllerCommand(
-            exampleTrajectory,
-            m_robotDrive::getPose, // Functional interface to feed supplier
-            DriveConstants.kDriveKinematics,
+      // SwerveControllerCommand swerveControllerCommand =
+      //     new SwerveControllerCommand(
+      //         exampleTrajectory,
+      //         m_robotDrive::getPose, // Functional interface to feed supplier
+      //         DriveConstants.kDriveKinematics,
 
-            // Position controllers
-            new PIDController(AutoConstants.kPXController, 0, 0),
-            new PIDController(AutoConstants.kPYController, 0, 0),
-            thetaController,
-            m_robotDrive::setModuleStates,
-            m_robotDrive);
+      //         // Position controllers
+      //         new PIDController(AutoConstants.kPXController, 0, 0),
+      //         new PIDController(AutoConstants.kPYController, 0, 0),
+      //         thetaController,
+      //         m_robotDrive::setModuleStates,
+      //         m_robotDrive);
 
-    // Reset odometer to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+      // // Reset odometer to the starting pose of the trajectory.
+      // m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
 
     // Run path following command, then stop at the end.
-    return new PathPlannerAuto("Auto Test");
+    //return new PathPlannerAuto("Auto Test");
+
+    // Backup Auto
+    return new Auto(m_robotDrive);
   }
 }
+

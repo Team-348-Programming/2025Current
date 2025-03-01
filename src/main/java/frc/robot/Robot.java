@@ -58,6 +58,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
 
     SmartDashboard.putNumber("Angle", -(DriveSubsystem.m_gyro.getAngle() % 360));
+    SmartDashboard.putNumber("Pose", RobotContainer.m_robotDrive.getPose().getX());
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -87,7 +88,9 @@ public class Robot extends TimedRobot {
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+
+  }
 
   @Override
   public void teleopInit() {
