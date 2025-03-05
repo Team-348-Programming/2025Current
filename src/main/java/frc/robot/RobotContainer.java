@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -26,7 +26,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
@@ -58,6 +59,8 @@ public class RobotContainer {
 
   // The controllers
   public static final CommandXboxController m_driverController = new CommandXboxController(0);
+  public static final CommandXboxController m_operatorController = new CommandXboxController(1);
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -93,12 +96,13 @@ public class RobotContainer {
     m_driverController.leftStick().whileTrue(m_robotDrive.setXCommand());
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
     // Pneumatics
-    m_driverController.a().onTrue(rc_PneumaticsC); // Coral
+    m_operatorController.a().onTrue(rc_PneumaticsC); // Coral
     // Elevator PID
-    m_driverController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 31)); // 29 MAX HEIGHT
-    m_driverController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 17));
-    m_driverController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 2));
+    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 31)); // 29 MAX HEIGHT
+    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 17));
+    m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 2));
     //m_driverController.y().onTrue(rc_ElevZeroC);
+    
   }
 
   @SuppressWarnings("null")
