@@ -29,6 +29,6 @@ public class ElevZeroC extends Command {
 
   @Override
   public boolean isFinished() {
-    return false;
+    return RobotContainer.rc_PIDSS.buttonInterrupted();
   }
 }

@@ -95,10 +95,10 @@ public class RobotContainer {
     // Pneumatics
     m_driverController.a().onTrue(rc_PneumaticsC); // Coral
     // Elevator PID
-    m_driverController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 32)); // 32 MAX HEIGHT
-    m_driverController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 15));
-    m_driverController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 0));
-    m_driverController.y().whileTrue(rc_ElevZeroC);
+    m_driverController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 31)); // 29 MAX HEIGHT
+    m_driverController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 17));
+    m_driverController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 2));
+    //m_driverController.y().onTrue(rc_ElevZeroC);
   }
 
   @SuppressWarnings("null")
