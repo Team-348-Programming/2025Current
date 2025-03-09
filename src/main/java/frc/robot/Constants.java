@@ -23,7 +23,7 @@ public final class Constants {
   public static final int PIDmotor1 = 9;
   public static final int PIDmotor2 = 10;
 
-  public static final double kP = 0.85;
+  public static final double kP = 0.8;
   public static final double kI = 0;
   public static final double kD = 0;
 
@@ -79,7 +79,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 4.8;
+    public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     // Chassis configuration

@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -34,11 +35,14 @@ public class ElevPIDC extends Command {
   @Override
   public void end(boolean interrupted) {
     m_elev.setVelocity(0);
+    if (RobotContainer.rc_PIDSS.buttonInterrupted()) {
+      RobotContainer.rc_PIDSS.Motor2.getEncoder().setPosition(0);
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return RobotContainer.rc_PIDSS.buttonInterrupted();
   }
 }

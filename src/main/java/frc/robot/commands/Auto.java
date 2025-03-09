@@ -26,7 +26,7 @@ public class Auto extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    RobotContainer.m_robotDrive.drive(.3, 0, 0, false);
+    RobotContainer.m_robotDrive.drive(-0.3, 0, 0, false);
   }
 
   // Called once the command ends or is interrupted.
@@ -38,6 +38,6 @@ public class Auto extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.m_robotDrive.getPose().getX() > 1;
+    return RobotContainer.m_robotDrive.getPose().getX() < -1;
   }
 }

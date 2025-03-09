@@ -16,4 +16,14 @@ public class PneumaticsC extends InstantCommand {
   public void initialize() {
     RobotContainer.rc_PneumaticsSS.ToggleCoral();
   }
+
+  @Override
+  public void end(boolean interrupted) {
+    RobotContainer.rc_PneumaticsSS.ToggleCoral();
+  }
+
+  @Override
+  public boolean isFinished() {
+    return false;
+  }
 }

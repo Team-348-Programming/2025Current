@@ -59,6 +59,11 @@ public class Robot extends TimedRobot {
 
     SmartDashboard.putNumber("Angle", -(DriveSubsystem.m_gyro.getAngle() % 360));
     SmartDashboard.putNumber("Pose", RobotContainer.m_robotDrive.getPose().getX());
+    SmartDashboard.putBoolean("IR Sensor", RobotContainer.rc_PIDSS.input.get());
+
+    if (RobotContainer.m_operatorController.x().getAsBoolean()) {
+      SmartDashboard.putString("Emergency Alert", "CRITICAL FAILURE: ROBOT SHUTDOWN INITIATED");
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

@@ -5,37 +5,22 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.Joystick;
+
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.OIConstants;
 
+import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-
-import java.util.List;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -49,10 +34,11 @@ public class RobotContainer {
   public static final DriveSubsystem m_robotDrive = new DriveSubsystem();
   public static final PneumaticsSS rc_PneumaticsSS = new PneumaticsSS();
   public static final PIDSS rc_PIDSS = new PIDSS();
+  public static final CoralRemoveSS rc_coralRemoveSS = new CoralRemoveSS();
 
   // The robot's commands
   public static final PneumaticsC rc_PneumaticsC = new PneumaticsC(rc_PneumaticsSS);
-  public static final ElevZeroC rc_ElevZeroC = new ElevZeroC(rc_PIDSS);
+  public static final ManualZeroC rc_manualZeroC = new ManualZeroC(rc_PIDSS);
 
   // Other instantiations
   public static final PneumaticHub PH = new PneumaticHub(1);
@@ -60,10 +46,15 @@ public class RobotContainer {
   // The controllers
   public static final CommandXboxController m_driverController = new CommandXboxController(0);
   public static final CommandXboxController m_operatorController = new CommandXboxController(1);
-  
+
+  // Camera
+  public static final UsbCamera CoralCamera = CameraServer.startAutomaticCapture("Coral", 0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+
+    CoralCamera.setResolution(640, 360);
+    CoralCamera.setFPS(30);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -96,13 +87,15 @@ public class RobotContainer {
     m_driverController.leftStick().whileTrue(m_robotDrive.setXCommand());
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
     // Pneumatics
-    m_operatorController.a().onTrue(rc_PneumaticsC); // Coral
+    m_operatorController.a().whileTrue(rc_PneumaticsC); // Coral
     // Elevator PID
-    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 31)); // 29 MAX HEIGHT
-    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 17));
-    m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 2));
-    //m_driverController.y().onTrue(rc_ElevZeroC);
-    
+    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 32)); // 32 MAX HEIGHT
+    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 16));
+    m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 1));
+    m_operatorController.start().whileTrue(rc_manualZeroC);
+
+    m_operatorController.y().whileTrue(new CoralRemoveC(rc_coralRemoveSS, -0.3));
+    m_operatorController.x().whileTrue(new CoralRemoveC(rc_coralRemoveSS, 0.3));
   }
 
   @SuppressWarnings("null")
@@ -117,46 +110,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Create config for trajectory
-      // TrajectoryConfig config =
-      //     new TrajectoryConfig(
-      //             AutoConstants.kMaxSpeedMetersPerSecond,
-      //             AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-      //         // Add kinematics to ensure max speed is actually obeyed
-      //         .setKinematics(DriveConstants.kDriveKinematics);
-
-      // // An example trajectory to follow. All units in meters.
-      // Trajectory exampleTrajectory =
-      //     TrajectoryGenerator.generateTrajectory(
-      //         // Start at the origin facing the +X direction
-      //         new Pose2d(0, 0, new Rotation2d(0)),
-      //         // Pass through these two interior waypoints, making an 's' curve path
-      //         List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-      //         // End 3 meters straight ahead of where we started, facing forward
-      //         new Pose2d(3, 0, new Rotation2d(0)),
-      //         config);
-
-      // var thetaController =
-      //     new ProfiledPIDController(
-      //         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-      // thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-      // SwerveControllerCommand swerveControllerCommand =
-      //     new SwerveControllerCommand(
-      //         exampleTrajectory,
-      //         m_robotDrive::getPose, // Functional interface to feed supplier
-      //         DriveConstants.kDriveKinematics,
-
-      //         // Position controllers
-      //         new PIDController(AutoConstants.kPXController, 0, 0),
-      //         new PIDController(AutoConstants.kPYController, 0, 0),
-      //         thetaController,
-      //         m_robotDrive::setModuleStates,
-      //         m_robotDrive);
-
-      // // Reset odometer to the starting pose of the trajectory.
-      // m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
     // Run path following command, then stop at the end.
     //return new PathPlannerAuto("Auto Test");
 

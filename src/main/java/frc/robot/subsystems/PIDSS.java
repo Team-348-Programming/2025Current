@@ -12,10 +12,11 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class PIDSS extends SubsystemBase {
 
-  //DigitalInput input = new DigitalInput(0);
+  public DigitalInput input = new DigitalInput(0);
 
   public final SparkMax Motor1 = new SparkMax(Constants.PIDmotor1, MotorType.kBrushless);
   public final SparkMax Motor2 = new SparkMax(Constants.PIDmotor2, MotorType.kBrushless);
@@ -33,12 +34,12 @@ public class PIDSS extends SubsystemBase {
   //private boolean button = input.get();
 
   public boolean buttonInterrupted() {
-    //if(button == true) {
-      //return true;
-    //}
-    //else{
+    if(input.get()) {
+      return true;
+    } 
+    else{
       return false;
-    //}
+    }
   }
 
   public void ElevStop() {
