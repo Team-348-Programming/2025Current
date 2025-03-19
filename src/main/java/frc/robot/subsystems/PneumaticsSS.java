@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -15,6 +14,10 @@ import frc.robot.Constants;
 public class PneumaticsSS extends SubsystemBase {
   /** Creates a new PneumaticsSS. */
   public final DoubleSolenoid Coral;
+  public final DoubleSolenoid Climb;
+  public final DoubleSolenoid Door;
+
+  public static String DoorStatus = "null";
 
   public PneumaticsSS() {
     Coral =
@@ -22,21 +25,35 @@ public class PneumaticsSS extends SubsystemBase {
                 PneumaticsModuleType.REVPH,
                 Constants.PneumaticsConstants.forwardCoralSol,
                 Constants.PneumaticsConstants.reverseCoralSol);
+    Climb =
+            new DoubleSolenoid(
+                PneumaticsModuleType.REVPH,
+                Constants.PneumaticsConstants.forwardClimbSol,
+                Constants.PneumaticsConstants.reverseClimbSol);
+    Door = 
+            new DoubleSolenoid(
+                PneumaticsModuleType.REVPH,
+                Constants.PneumaticsConstants.forwardDoorSol,
+                Constants.PneumaticsConstants.reverseDoorSol);
     Coral.set(Value.kReverse);
+    Climb.set(Value.kReverse);
+    Door.set(Value.kReverse);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    CoralStatus();
-    SmartDashboard.putData("Coral", Coral);
   }
 
   public void ToggleCoral() {
     Coral.toggle();
   }
 
-  public void CoralStatus() {
-    Coral.get();
+  public void ToggleClimber() {
+    Climb.toggle();
+  }
+
+  public void ToggleDoor() {
+    Door.toggle();
   }
 }

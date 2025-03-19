@@ -8,6 +8,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,13 +29,22 @@ public class PIDSS extends SubsystemBase {
 
   private double desiredVelocity;
   private double desiredPosition;
+  public static boolean override = false;
 
   private double voltage;
 
   //private boolean button = input.get();
 
+  public void down() {
+    override = true;
+  }
+
+  public void other() {
+    override = false;
+  }
+
   public boolean buttonInterrupted() {
-    if(input.get()) {
+    if(!(input.get()) && override) {
       return true;
     } 
     else{

@@ -7,6 +7,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
@@ -23,11 +24,23 @@ public class ElevPIDC extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    if(RobotContainer.m_operatorController.povDown().getAsBoolean()) {
+      RobotContainer.rc_PIDSS.down();
+    }
+    if(RobotContainer.m_operatorController.povUp().getAsBoolean() || RobotContainer.m_operatorController.povRight().getAsBoolean()) {
+      RobotContainer.rc_PIDSS.other();
+    }
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    // THE ZEROING MUST BE INSIDE THE EXECUTE, BECAUSE OF HOW PID WORKS @OVERRIDE END IS NEVER CALLED
+    if (RobotContainer.rc_PIDSS.buttonInterrupted()) {
+      RobotContainer.rc_PIDSS.Motor2.getEncoder().setPosition(0);
+    }
+    
     m_elev.setPosition(m_desiredVelocity.getAsDouble());
   }
 
@@ -35,14 +48,12 @@ public class ElevPIDC extends Command {
   @Override
   public void end(boolean interrupted) {
     m_elev.setVelocity(0);
-    if (RobotContainer.rc_PIDSS.buttonInterrupted()) {
-      RobotContainer.rc_PIDSS.Motor2.getEncoder().setPosition(0);
-    }
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.rc_PIDSS.buttonInterrupted();
+      return false;
   }
 }

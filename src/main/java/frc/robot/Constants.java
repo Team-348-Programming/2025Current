@@ -30,6 +30,10 @@ public final class Constants {
   public static final class PneumaticsConstants {
     public static final int forwardCoralSol = 5;
     public static final int reverseCoralSol = 6;
+    public static final int forwardClimbSol = 8;
+    public static final int reverseClimbSol = 9;
+    public static final int forwardDoorSol = 15;
+    public static final int reverseDoorSol = 14;
   }
 
   public static final class CoralSubsystemConstants {

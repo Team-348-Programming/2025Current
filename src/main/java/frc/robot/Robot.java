@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.PIDSS;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -57,13 +58,11 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    SmartDashboard.putNumber("Angle", -(DriveSubsystem.m_gyro.getAngle() % 360));
-    SmartDashboard.putNumber("Pose", RobotContainer.m_robotDrive.getPose().getX());
-    SmartDashboard.putBoolean("IR Sensor", RobotContainer.rc_PIDSS.input.get());
-
-    if (RobotContainer.m_operatorController.x().getAsBoolean()) {
-      SmartDashboard.putString("Emergency Alert", "CRITICAL FAILURE: ROBOT SHUTDOWN INITIATED");
-    }
+    /*SmartDashboard.putNumber("Drive Angle", -(DriveSubsystem.m_gyro.getAngle() % 360));
+    SmartDashboard.putNumber("Drive Pose", RobotContainer.m_robotDrive.getPose().getX());
+    SmartDashboard.putBoolean("IR Sensor Tripped?", !RobotContainer.rc_PIDSS.input.get());
+    SmartDashboard.putBoolean("Override", PIDSS.override);
+    SmartDashboard.putString("Trapdoor Status", RobotContainer.rc_PneumaticsSS.DoorStatus);*/
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -128,10 +127,5 @@ public class Robot extends TimedRobot {
    * <p>This collects each subsystem's physics model's current draw to update the battery simulation
    */
   @Override
-  public void simulationPeriodic() {
-    // SimBattery estimates loaded battery voltages
-    RoboRioSim.setVInVoltage(
-        BatterySim.calculateDefaultBatteryLoadedVoltage(
-            m_robotContainer.getSimulationTotalCurrentDraw()));
-  }
+  public void simulationPeriodic() {}
 }

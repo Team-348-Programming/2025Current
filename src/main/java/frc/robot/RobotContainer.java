@@ -5,13 +5,20 @@
 
 package frc.robot;
 
+import org.ejml.equation.Variable;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 
 import edu.wpi.first.math.MathUtil;
-
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -29,6 +36,7 @@ import frc.robot.subsystems.*;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  private final SendableChooser<Command> autoChooser;
 
   // The robot's subsystems
   public static final DriveSubsystem m_robotDrive = new DriveSubsystem();
@@ -36,9 +44,13 @@ public class RobotContainer {
   public static final PIDSS rc_PIDSS = new PIDSS();
   public static final CoralRemoveSS rc_coralRemoveSS = new CoralRemoveSS();
 
+  //NamedCommands.registerCommand("ElevUp", PneumaticsSS.ToggleCoral());
+
   // The robot's commands
   public static final PneumaticsC rc_PneumaticsC = new PneumaticsC(rc_PneumaticsSS);
   public static final ManualZeroC rc_manualZeroC = new ManualZeroC(rc_PIDSS);
+  public static final ClimberC rc_climberC = new ClimberC(rc_PneumaticsSS);
+  public static final TrapdoorC rc_trapdoorC = new TrapdoorC(rc_PneumaticsSS);
 
   // Other instantiations
   public static final PneumaticHub PH = new PneumaticHub(1);
@@ -48,13 +60,20 @@ public class RobotContainer {
   public static final CommandXboxController m_operatorController = new CommandXboxController(1);
 
   // Camera
-  public static final UsbCamera CoralCamera = CameraServer.startAutomaticCapture("Coral", 0);
+  public static final UsbCamera CoralCamera = CameraServer.startAutomaticCapture("Coral", 1);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    NamedCommands.registerCommand("ElevUp", new Command() {
+      @Override
+      public void initialize() {
+          rc_PneumaticsSS.ToggleCoral();
+      }
+    });
 
-    CoralCamera.setResolution(640, 360);
-    CoralCamera.setFPS(30);
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
 
     // Configure the button bindings
     configureButtonBindings();
@@ -83,27 +102,28 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    // Driver controller button commands
+    
+    // Driver Controller
     m_driverController.leftStick().whileTrue(m_robotDrive.setXCommand());
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
+    m_driverController.leftTrigger().whileTrue(rc_trapdoorC);
+    
+    // Operator Controller
     // Pneumatics
     m_operatorController.a().whileTrue(rc_PneumaticsC); // Coral
     // Elevator PID
-    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 32)); // 32 MAX HEIGHT
-    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 16));
-    m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> 1));
+    m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 31)); // 32 MAX HEIGHT
+    m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 13.5));
+    m_operatorController.povDown().onTrue(new ElevPIDC(rc_PIDSS, () -> -0.5));
     m_operatorController.start().whileTrue(rc_manualZeroC);
 
-    m_operatorController.y().whileTrue(new CoralRemoveC(rc_coralRemoveSS, -0.3));
-    m_operatorController.x().whileTrue(new CoralRemoveC(rc_coralRemoveSS, 0.3));
-  }
+    m_operatorController.y().whileTrue(new CoralRemoveC(rc_coralRemoveSS, -0.5));
+    m_operatorController.x().whileTrue(new CoralRemoveC(rc_coralRemoveSS, 0.5));
 
-  @SuppressWarnings("null")
-  public double getSimulationTotalCurrentDraw() {
-    // for each subsystem with simulation
-    return (Double) null;
-  }
+    m_operatorController.b().onTrue(rc_climberC);
 
+    m_operatorController.leftTrigger().whileTrue(rc_trapdoorC);
+  }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

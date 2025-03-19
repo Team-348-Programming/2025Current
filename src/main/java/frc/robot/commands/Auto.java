@@ -5,7 +5,10 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.measure.Time;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.*;
 
@@ -26,6 +29,25 @@ public class Auto extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    /*double starttime = Timer.getFPGATimestamp();
+    if (starttime - Timer.getFPGATimestamp() < 2) { 
+      RobotContainer.m_robotDrive.drive(-0.3, 0, 0, false);
+    }
+    else if (starttime - Timer.getFPGATimestamp() < 2.0001) {
+      RobotContainer.rc_PIDSS.Motor2.getEncoder().setPosition(0);
+    }
+    else if (starttime - Timer.getFPGATimestamp() < 2.2) {
+      new ElevPIDC(RobotContainer.rc_PIDSS, () -> 32);
+    }
+    else if (starttime - Timer.getFPGATimestamp() < 2.5) {
+      RobotContainer.rc_PneumaticsSS.ToggleCoral();
+    }
+    else if (starttime - Timer.getFPGATimestamp() < 2.6) {
+      RobotContainer.rc_PneumaticsSS.ToggleCoral();
+    }
+    else if (starttime - Timer.getFPGATimestamp() < 2.7) {
+      new ElevPIDC(RobotContainer.rc_PIDSS, () -> 1);
+    }*/
     RobotContainer.m_robotDrive.drive(-0.3, 0, 0, false);
   }
 
