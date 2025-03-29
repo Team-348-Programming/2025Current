@@ -36,7 +36,7 @@ public class PneumaticsSS extends SubsystemBase {
                 Constants.PneumaticsConstants.forwardDoorSol,
                 Constants.PneumaticsConstants.reverseDoorSol);
     Coral.set(Value.kReverse);
-    Climb.set(Value.kReverse);
+    Climb.set(Value.kForward);
     Door.set(Value.kReverse);
   }
 
@@ -54,6 +54,6 @@ public class PneumaticsSS extends SubsystemBase {
   }
 
   public void ToggleDoor() {
-    Door.toggle();
+    Door.set(Value.kForward);
   }
 }

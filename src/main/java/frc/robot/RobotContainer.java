@@ -5,17 +5,12 @@
 
 package frc.robot;
 
-import org.ejml.equation.Variable;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.UsbCamera;
+import com.pathplanner.lib.config.RobotConfig;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -44,8 +39,8 @@ public class RobotContainer {
   public static final PIDSS rc_PIDSS = new PIDSS();
   public static final CoralRemoveSS rc_coralRemoveSS = new CoralRemoveSS();
 
-  //NamedCommands.registerCommand("ElevUp", PneumaticsSS.ToggleCoral());
-
+  // NamedCommands.registerCommand("ElevUp", PneumaticsSS.ToggleCoral());
+// 
   // The robot's commands
   public static final PneumaticsC rc_PneumaticsC = new PneumaticsC(rc_PneumaticsSS);
   public static final ManualZeroC rc_manualZeroC = new ManualZeroC(rc_PIDSS);
@@ -55,12 +50,10 @@ public class RobotContainer {
   // Other instantiations
   public static final PneumaticHub PH = new PneumaticHub(1);
 
-  // The controllers
+  // The Controllers
   public static final CommandXboxController m_driverController = new CommandXboxController(0);
   public static final CommandXboxController m_operatorController = new CommandXboxController(1);
 
-  // Camera
-  public static final UsbCamera CoralCamera = CameraServer.startAutomaticCapture("Coral", 1);
 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -102,7 +95,6 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    
     // Driver Controller
     m_driverController.leftStick().whileTrue(m_robotDrive.setXCommand());
     m_driverController.start().onTrue(m_robotDrive.zeroHeadingCommand());
@@ -111,6 +103,7 @@ public class RobotContainer {
     // Operator Controller
     // Pneumatics
     m_operatorController.a().whileTrue(rc_PneumaticsC); // Coral
+    m_operatorController.b().whileTrue(rc_climberC);
     // Elevator PID
     m_operatorController.povUp().onTrue(new ElevPIDC(rc_PIDSS, () -> 31)); // 32 MAX HEIGHT
     m_operatorController.povRight().onTrue(new ElevPIDC(rc_PIDSS, () -> 13.5));
@@ -120,10 +113,48 @@ public class RobotContainer {
     m_operatorController.y().whileTrue(new CoralRemoveC(rc_coralRemoveSS, -0.5));
     m_operatorController.x().whileTrue(new CoralRemoveC(rc_coralRemoveSS, 0.5));
 
-    m_operatorController.b().onTrue(rc_climberC);
+    m_operatorController.rightTrigger().onTrue(rc_climberC);
 
     m_operatorController.leftTrigger().whileTrue(rc_trapdoorC);
   }
+  
+    private void configureAutoBuilder() {
+        try {
+            var config = RobotConfig.fromGUISettings();
+            AutoBuilder.configure(
+                    () -> m_robotDrive.getState().Pose, // Supplier of current robot pose
+                    m_robotDrive::resetPose, // Consumer for seeding pose against auto
+                    () -> m_robotDrive.getState().Speeds, // Supplier of current robot speeds
+                    // Consumer of ChassisSpeeds and feedforwards to drive the robot
+                    (speeds, feedforwards) -> m_robotDrive.setControl(
+                            m_pathApplyRobotSpeeds.withSpeeds(speeds)
+                                    .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                                    .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
+                    new PPHolonomicDriveController(
+                            // TODO: These gains appears to have been massively under-tuned for
+                            // reasonable PP Tracking.
+                            // PID constants for translation
+                            new PIDConstants(5, 0.5, 0),
+                            // PID constants for rotation
+                            new PIDConstants(5, 0.5, 0)),
+                    config,
+                    // Assume the path needs to be flipped for Red vs Blue, this is normally the
+                    // case
+                    () -> {
+                        // var alliance = DriverStation.getAlliance();
+                        // if (alliance.isPresent() && DriverStation.isAutonomous()) {
+                        // return alliance.get() == DriverStation.Alliance.Red;
+                        // }
+
+                        return false;
+                    },
+
+                    m_robotDrive // Subsystem for requirements
+            );
+        } catch (Exception ex) {
+            DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder",
+                    ex.getStackTrace());
+        }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -131,10 +162,10 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // Run path following command, then stop at the end.
-    //return new PathPlannerAuto("Auto Test");
+    return new PathPlannerAuto("Auto Test");
 
     // Backup Auto
-    return new Auto(m_robotDrive);
+    // return new Auto(m_robotDrive);
   }
 }
 

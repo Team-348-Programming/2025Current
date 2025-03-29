@@ -1,0 +1,28 @@
+{
+  "Connections": {
+    "open": true
+  },
+  "NetworkTables Settings": {
+    "mode": "Client (NT4)",
+    "serverTeam": "348"
+  },
+  "Server": {
+    "open": true
+  },
+  "transitory": {
+    "CameraPublisher": {
+      "Camera rPi Camera 1": {
+        "string[]##v_/CameraPublisher/Camera rPi Camera 1/modes": {
+          "open": true
+        },
+        "string[]##v_/CameraPublisher/Camera rPi Camera 1/streams": {
+          "open": true
+        }
+      },
+      "open": true,
+      "rPi Camera 0": {
+        "open": true
+      }
+    }
+  }
+}
