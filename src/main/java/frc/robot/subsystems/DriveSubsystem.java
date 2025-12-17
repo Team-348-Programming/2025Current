@@ -21,6 +21,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.units.*;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -62,7 +65,7 @@ public class DriveSubsystem extends SubsystemBase {
   public SwerveDriveOdometry m_odometry =
       new SwerveDriveOdometry(
           DriveConstants.kDriveKinematics,
-          Rotation2d.fromDegrees(m_gyro.getAngle() % 360),
+          Rotation2d.fromDegrees(m_gyro.getYaw().getValue().in(Units.Degrees) % 360),
           new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -126,7 +129,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        Rotation2d.fromDegrees(m_gyro.getAngle() % 360),
+        Rotation2d.fromDegrees(m_gyro.getYaw().getValue().in(Units.Degrees) % 360),
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -151,7 +154,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(m_gyro.getAngle() % 360),
+        Rotation2d.fromDegrees(m_gyro.getYaw().getValue().in(Units.Degrees) % 360),
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
@@ -182,7 +185,7 @@ public class DriveSubsystem extends SubsystemBase {
                     xSpeedDelivered,
                     ySpeedDelivered,
                     rotDelivered,
-                    Rotation2d.fromDegrees(360 - m_gyro.getAngle()))
+                    Rotation2d.fromDegrees(360 - m_gyro.getYaw().getValue().in(Units.Degrees)))
                 : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -240,7 +243,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(m_gyro.getAngle()).getDegrees();
+    return Rotation2d.fromDegrees(m_gyro.getYaw().getValue().in(Units.Degrees)).getDegrees();
   }
 
   /**
@@ -254,7 +257,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   public void resetPose(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(m_gyro.getAngle() % 360),
+        Rotation2d.fromDegrees(m_gyro.getYaw().getValue().in(Units.Degrees) % 360),
         new SwerveModulePosition[] {
           m_frontLeft.getPosition(),
           m_frontRight.getPosition(),
